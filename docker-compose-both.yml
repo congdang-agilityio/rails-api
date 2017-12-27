@@ -1,0 +1,31 @@
+version: '2.0'
+services:
+  auth:
+    build: .
+    volumes:
+      - .:/usr/src/auth
+      - bundle:/auth-bundle
+    links:
+      - postgres:db
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+
+  searcher:
+    build: ./../searcher
+    volumes:
+      - ./../searcher:/usr/src/searcher
+      - bundle:/searcher-bundle
+    links:
+      - postgres:db
+
+    env_file:
+      - ./../searcher/.env
+
+    ports:
+      - "9000:3000"
+  postgres:
+    image: postgres
+volumes:
+  bundle: {}

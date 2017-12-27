@@ -1,0 +1,25 @@
+version: '2.0'
+services:
+  auth:
+    build: .
+    volumes:
+      - .:/usr/src/auth
+      - bundle:/auth-bundle
+    links:
+      - postgres:db
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+
+  postgres:
+    image: postgres
+
+  website:
+    build: ../../website-service/src
+    ports:
+      - "8000:8000"
+    environment:
+    - USER_SERVICE_URL=auth:3000/v1/users
+volumes:
+  bundle: {}

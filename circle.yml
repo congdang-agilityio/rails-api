@@ -1,0 +1,43 @@
+machine:
+  ruby:
+    version: 2.3.3
+  services:
+    - rabbitmq-server
+  environment:
+    DATABASE_TEST_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
+    RABBITMQ_URL: amqp://localhost:5672
+
+general:
+  branches:
+    only:
+      - develop
+
+dependencies:
+  pre:
+    - gem install bundler --pre
+
+  override:
+    - bundle install:
+        timeout: 180
+
+database:
+  override:
+    - bundle exec rake db:create db:schema:load --trace
+
+test:
+  override:
+    - bundle exec rspec spec:
+        environment:
+          RAILS_ENV: test
+  post:
+    - $TRIGGER_DOCKER_HUB_BUILD
+
+# deployment:
+#   development:
+#     branch: develop
+#     commands:
+#       - ./kube-deploy.sh
+
+# notify:
+#   webhooks:
+#     - url: https://hooks.slack.com/services/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
