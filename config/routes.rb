@@ -19,7 +19,7 @@ Rails.application.routes.draw do
           delete 'sign_out' => 'sessions#destroy'
           post 'confirmation' => 'confirmations#create'
           get 'confirmation' => 'confirmations#show'
-          get 'dogs' => 'sessions#index'
+          get 'users' => 'sessions#index'
         end
 
         match 'authorize/:provider/callback',
